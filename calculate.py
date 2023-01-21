@@ -62,6 +62,16 @@ def measurements_to_words(body_msmts):
     return words
 
 
+def image_to_measurements(filepath, filepath_side, bodylen):
+    # TODO: dummy values
+    msmts_est = {
+        'chest': 35.0,
+        'waist': 35.0,
+        'hip': 35.0,
+    }
+    return msmts_est
+
+
 if __name__ == "__main__":
     print('Hello!')
     body_msmts = {  # dummy values

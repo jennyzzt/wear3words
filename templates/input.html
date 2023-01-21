@@ -15,5 +15,126 @@
 <body>
   <div class="container">
     <h1>Hello there!</h1>
+    <div class="row">
+      <div class="col">
+	<br>
+	<h3>Supported Ranges</h3>
+	<div id="supmsmt"></div>
+	<br>
+	<h3>Input your measurements in inches</h3>
+	<form id="form" enctype='multipart/form-data' action="/" method="POST">
+	  <p id="input_msmts"></p>
+	  <input class="btn btn-primary" type="submit" value="Submit" onclick="show_loading()"/>
+	  <input class="btn btn-secondary" type="button" value="Interpolate" onclick="interpolate()"/>
+	  <input class="btn btn-success" type="button" value="Photo Input" onclick="photo_input()"/>
+	  <button class="btn btn-warning" type="button" style="visibility:hidden;" id="loading_btn" disabled>
+	    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+	    Loading...
+	  </button>
+	  <div style="display:none;" id="input_photos_div">
+	    <br>
+	    <h4>Choose to input all values above or below</h4>
+	    <div class="input-group mb-3">
+	      <div class="input-group-prepend">
+	        <span class="input-group-text">Body Length</span>
+	      </div>
+	      <input type="number" step="0.1" class="form-control" placeholder="measurement in inches" id="bodylen_value" name="bodylen"/>
+	      <div>body length is measurement (c) in the picture on the right</div>
+	    </div>
+	    <div class="input-group mb-3">
+	      <div class="input-group-prepend">
+		<span class="input-group-text">
+		  Front Image&nbsp;&nbsp;
+		  <img src="{{url_for('static', filename='front_pose.png')}}" align="center" style="width: auto; max-height: 20px;"/>
+		</span>
+	      </div>
+	      <input class="form-control" type="file" id="front_image" accept="image/*" name="front_image"/>
+	    </div>
+	    <div class="input-group mb-3">
+	      <div class="input-group-prepend">
+		<span class="input-group-text">
+		  Side Image&nbsp;&nbsp;
+		  <img src="{{url_for('static', filename='side_pose.png')}}" align="center" style="width: auto; max-height: 20px;"/>
+		</span>
+	      </div>
+	      <input class="form-control" type="file" id="side_image" accept="image/*" name="side_image"/>
+	    </div>
+	  </div>
+	</form>
+	<br>
+	<div id="words3">{{value['words3disp']}}</div>
+	<div id="image_est">{{value['imgestdisp']}}</div>
+      </div>
+      <div class="col">
+	<img src="{{url_for('static', filename='msmt.jpg')}}" alt="Measurements Guide" align="middle"/>
+      </div>
+    </div>
+  </div>
+  <script>
+    const msmts_range = {
+        'chest': [33.0, 47.0],
+        'waist': [25.0, 40.0],
+        'hip': [35.0, 49.0],
+    };
+    const msmts = Object.keys(msmts_range);
+    // generate supported measurements table
+    var text = `
+        <table class="table table-light table-hover">
+	  <tr class="table-dark">
+	    <th>measurement (in inches)</th>
+	    <th>min</th>
+	    <th>max</th>
+	  </tr>
+    `;
+    for (const [key, value] of Object.entries(msmts_range)) {
+	text += `
+          <tr>
+	    <td>${key}</td>
+	    <td>${value[0]}</td>
+	    <td>${value[1]}</td>
+	  </tr>
+        `;
+    }
+    text += "</table>"
+    document.getElementById("supmsmt").innerHTML = text;
+    // generate measurements form
+    var text = "";
+    for (let i=0; i < msmts.length; i++) {
+	text += `<div class="input-group mb-3">
+	           <div class="input-group-prepend">
+	             <span class="input-group-text">${msmts[i]}</span>
+	           </div>
+	           <input type="number" step="0.1" min="${msmts_range[msmts[i]][0]}" max="${msmts_range[msmts[i]][1]}" class="form-control" placeholder="measurement in inches" id="${msmts[i]}_value" name="${msmts[i]}"/>
+	         </div>`;
+    }
+    document.getElementById("input_msmts").innerHTML = text;
+    // function to interpolate between measurements
+    function interpolate() {
+	var msmts_vals = {};
+	for (let i=0; i < msmts.length; i++) {
+	    msmts_vals[`${msmts[i]}`] = document.getElementById(`${msmts[i]}_value`).value;
+	}
+	var norm_vals = [];
+	for (const [key, value] of Object.entries(msmts_vals)) {
+	    if (value) {
+		norm_vals.push((value - msmts_range[key][0]) / (msmts_range[key][1] - msmts_range[key][0]));
+	    }
+	}
+	const norm_size = norm_vals.reduce((a, b) => a + b, 0) / norm_vals.length;
+	for (const [key, value] of Object.entries(msmts_vals)) {
+	    if (!value) {
+		document.getElementById(`${key}_value`).value = parseFloat((norm_size * (msmts_range[key][1] - msmts_range[key][0]) + msmts_range[key][0]).toFixed(1));
+	    }
+	}
+    }
+    function photo_input() {
+	document.getElementById("input_photos_div").style.display = "block";
+    }
+    function show_loading() {
+	document.getElementById("loading_btn").style.visibility = "visible";
+    }
+  </script>
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>
