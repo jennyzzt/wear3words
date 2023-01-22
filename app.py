@@ -29,7 +29,7 @@ def video_time():
     livepeer_api_key = os.environ.get('LIVEPEER_API_TOKEN')
     response = requests.post(
         url='https://livepeer.studio/api/asset/import',
-        data='{"url":"' + videolink + '","name":"Example name"}',
+        data='{"url":"' + videolink + '","name":"w3w user"}',
         headers={
             'Authorization': f'Bearer {livepeer_api_key}',
             'Content-Type': 'application/json'
