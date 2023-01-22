@@ -24,7 +24,7 @@ def video_time():
     words = [word0, word1, word2]
     print('getting video')
     videolink = words_to_video(words)
-    # videolink = "https://replicate.delivery/pbxt/BTmJnkXtHZqFEZz377Pe8zLH4hsAY75SM3fJD2l7EyVOzqWQA/out.mp4"  # for debugging
+    # videolink = "https://replicate.delivery/pbxt/vOIM4etmY0TYQi3MqSrTeKnvSNCNOdhO2wRSYKGe0taYBctgA/out.mp4"  # for debugging
     # use livepeer to encode video
     livepeer_api_key = os.environ.get('LIVEPEER_API_TOKEN')
     response = requests.post(
@@ -36,7 +36,7 @@ def video_time():
         }
     )
     playbackid = response.json()['asset']['playbackId']
-    # playbackid = '8036ubck6l78tk3o'  # for debugging
+    # playbackid = '3ce5nbcrrq3g5bfb'  # for debugging
     videolink = f'https://lvpr.tv?v={playbackid}'
     return jsonify({'videolink': videolink})
 
