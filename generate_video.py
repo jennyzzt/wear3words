@@ -12,10 +12,10 @@ def words_to_video(words):
     inputs = {
         'prompts': words_list,
         'scheduler': "klms",
-        'num_inference_steps': 1,
+        'num_inference_steps': 10,
         'guidance_scale': 7.5,
-        'num_steps': 3,
-        'fps': 5,
+        'num_steps': 5,
+        'fps': 1,
     }
     output = version.predict(**inputs)
     return output
