@@ -37,7 +37,7 @@ def measurements_to_wordidx(body_msmts):
         if i == len(msmts_steps) - 1:
             word_combi_idx += v
         else:
-            word_combi_idx += v * sum(list(msmts_steps.values())[i+1:])
+            word_combi_idx += v * np.prod(list(msmts_steps.values())[i+1:])
     word_combi_idx = round(word_combi_idx, 0)
 
     # unpack word combination index to invidual word indices
