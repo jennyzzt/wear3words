@@ -1,8 +1,9 @@
 import os
-from flask import Flask, render_template, request, url_for, send_from_directory
+from flask import Flask, render_template, request, url_for, send_from_directory, jsonify
 from markupsafe import Markup
 
 from calculate import measurements_to_words, image_to_measurements
+from generate_video import words_to_video
 
 
 app = Flask(__name__)
@@ -14,10 +15,22 @@ app.config["IMAGE_PROCESSED"] = "./uploaded_images/processed"
 def download_file(filename):
     return send_from_directory(app.config["IMAGE_PROCESSED"], filename, as_attachment=True)
 
+@app.route('/video_time')
+def video_time():
+    word0 = request.args.get('word0')
+    word1 = request.args.get('word1')
+    word2 = request.args.get('word2')
+    words = [word0, word1, word2]
+    print('getting video')
+    videolink = words_to_video(words)
+    # videolink = "https://www.google.com"  # for debugging
+    return jsonify({'videolink': videolink})
+
 @app.route("/", methods=["GET", "POST"])
 def get_measurements():
     words3disp = ""
     imgestdisp = ""
+    words3 = [""] * 3
     if request.method == "POST":
         input_image_success = False
         if 'front_image' in request.files and 'side_image' in request.files and 'bodylen' in request.form:
@@ -59,13 +72,22 @@ def get_measurements():
                     })
         # calculate the three words
         words3 = measurements_to_words(body_msmts)
-        words3 = f'///{".".join(words3)}'
+        words3_print = f'///{".".join(words3)}'
         # html pretty print for measurements
         msmts_pprt = ""
         for k, v in body_msmts.items():
             msmts_pprt += f'{k}: {v}\n'
-        words3disp = Markup(f"<h3>{words3}</h3><pre>{msmts_pprt}</pre>")
+        words3disp = Markup(f"""
+            <h3 style="display: inline;">{words3_print}</h3>&nbsp
+            <input id="genvideo" class="btn btn-warning" type="button" value="Livepeer this!""/>
+            <pre>{msmts_pprt}</pre>
+        """)
     return render_template('input.html', value={
         'words3disp': words3disp,
         'imgestdisp': imgestdisp,
+        'words3': words3,
     })
+
+
+if __name__ == '__main__':
+   app.run()
