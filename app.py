@@ -1,9 +1,10 @@
 import os
 from flask import Flask, render_template, request, url_for, send_from_directory, jsonify
+import requests
 from markupsafe import Markup
 
 from calculate import measurements_to_words, image_to_measurements
-from generate_video import words_to_video
+# from generate_video import words_to_video
 
 
 app = Flask(__name__)
@@ -23,7 +24,20 @@ def video_time():
     words = [word0, word1, word2]
     print('getting video')
     videolink = words_to_video(words)
-    # videolink = "https://www.google.com"  # for debugging
+    # videolink = "https://replicate.delivery/pbxt/BTmJnkXtHZqFEZz377Pe8zLH4hsAY75SM3fJD2l7EyVOzqWQA/out.mp4"  # for debugging
+    # use livepeer to encode video
+    livepeer_api_key = os.environ.get('LIVEPEER_API_TOKEN')
+    response = requests.post(
+        url='https://livepeer.studio/api/asset/import',
+        data='{"url":"' + videolink + '","name":"Example name"}',
+        headers={
+            'Authorization': f'Bearer {livepeer_api_key}',
+            'Content-Type': 'application/json'
+        }
+    )
+    playbackid = response.json()['asset']['playbackId']
+    # playbackid = '8036ubck6l78tk3o'  # for debugging
+    videolink = f'https://lvpr.tv?v={playbackid}'
     return jsonify({'videolink': videolink})
 
 @app.route("/", methods=["GET", "POST"])

@@ -65,6 +65,7 @@
 	<br>
 	<a id="msmtvideo" href="" target="_blank" style="visibility:hidden;">generated video</a>
 	<div id="words3">{{value['words3disp']}}</div>
+	<!-- <iframe id="msmtvideo_embed" style="display:none;" src="" frameborder="0" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe> -->
 	<div id="image_est">{{value['imgestdisp']}}</div>
       </div>
       <div class="col">
@@ -152,7 +153,10 @@
 	     success: function(data) {
 		 var link = document.getElementById("msmtvideo");
 		 link.setAttribute('href', data.videolink);
-		 link.setAttribute("style", "visibility:visible;");
+		 link.setAttribute('style', 'visibility:visible;');
+		 // var video = document.getElementById("msmtvideo_embed");
+		 // video.setAttribute('src', data.videolink);
+		 // video.setAttribute('style', 'dispaly:block;');
 		 hide_loading();
 	     }
 	 });
