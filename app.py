@@ -4,7 +4,7 @@ import requests
 from markupsafe import Markup
 
 from calculate import measurements_to_words, image_to_measurements
-# from generate_video import words_to_video
+from generate_video import words_to_video
 
 
 app = Flask(__name__)
@@ -93,7 +93,7 @@ def get_measurements():
             msmts_pprt += f'{k}: {v}\n'
         words3disp = Markup(f"""
             <h3 style="display: inline;">{words3_print}</h3>&nbsp
-            <input id="genvideo" class="btn btn-warning" type="button" value="Livepeer this!""/>
+            <input id="genvideo" class="btn-rainbow" type="button" value="Livepeer this!""/>
             <pre>{msmts_pprt}</pre>
         """)
     return render_template('input.html', value={
