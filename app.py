@@ -4,7 +4,7 @@ import requests
 from markupsafe import Markup
 
 from calculate import measurements_to_words, image_to_measurements
-from generate_video import words_to_video
+# from generate_video import words_to_video
 
 
 app = Flask(__name__)
@@ -23,20 +23,20 @@ def video_time():
     word2 = request.args.get('word2')
     words = [word0, word1, word2]
     print('getting video')
-    videolink = words_to_video(words)
-    # videolink = "https://replicate.delivery/pbxt/vOIM4etmY0TYQi3MqSrTeKnvSNCNOdhO2wRSYKGe0taYBctgA/out.mp4"  # for debugging
-    # use livepeer to encode video
-    livepeer_api_key = os.environ.get('LIVEPEER_API_TOKEN')
-    response = requests.post(
-        url='https://livepeer.studio/api/asset/import',
-        data='{"url":"' + videolink + '","name":"w3w user"}',
-        headers={
-            'Authorization': f'Bearer {livepeer_api_key}',
-            'Content-Type': 'application/json'
-        }
-    )
-    playbackid = response.json()['asset']['playbackId']
-    # playbackid = '3ce5nbcrrq3g5bfb'  # for debugging
+    # videolink = words_to_video(words)
+    # # videolink = "https://replicate.delivery/pbxt/vOIM4etmY0TYQi3MqSrTeKnvSNCNOdhO2wRSYKGe0taYBctgA/out.mp4"  # for debugging
+    # # use livepeer to encode video
+    # livepeer_api_key = os.environ.get('LIVEPEER_API_TOKEN')
+    # response = requests.post(
+    #     url='https://livepeer.studio/api/asset/import',
+    #     data='{"url":"' + videolink + '","name":"w3w user"}',
+    #     headers={
+    #         'Authorization': f'Bearer {livepeer_api_key}',
+    #         'Content-Type': 'application/json'
+    #     }
+    # )
+    # playbackid = response.json()['asset']['playbackId']
+    playbackid = '3ce5nbcrrq3g5bfb'  # for debugging
     videolink = f'https://lvpr.tv?v={playbackid}'
     return jsonify({'videolink': videolink})
 
@@ -58,7 +58,12 @@ def get_measurements():
                 filepath_side = os.path.join(app.config["IMAGE_UPLOADS"], 'person_side.png')
                 image_side.save(filepath_side)
                 bodylen = float(request.form['bodylen'])
-                body_msmts = image_to_measurements(filepath, filepath_side, bodylen)
+                # body_msmts = image_to_measurements(filepath, filepath_side, bodylen)
+                body_msmts = {
+                    'chest': 38.2,
+                    'waist': 37.6,
+                    'hip': 39.5,
+                }
                 # format html to be shown
                 msmt_names = ['chest', 'waist', 'hip']
                 imgestdisp = ""
