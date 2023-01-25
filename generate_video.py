@@ -15,7 +15,7 @@ def words_to_video(words):
         'num_inference_steps': 10,
         'guidance_scale': 7.5,
         'num_steps': 5,
-        'fps': 1,
+        'fps': 5,
     }
     output = version.predict(**inputs)
     return output
