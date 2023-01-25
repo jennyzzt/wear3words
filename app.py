@@ -60,9 +60,9 @@ def get_measurements():
                 bodylen = float(request.form['bodylen'])
                 # body_msmts = image_to_measurements(filepath, filepath_side, bodylen)
                 body_msmts = {
-                    'chest': 38.2,
-                    'waist': 37.6,
-                    'hip': 39.5,
+                    'chest': 39.3,
+                    'waist': 42.5,
+                    'hip': 44.5,
                 }
                 # format html to be shown
                 msmt_names = ['chest', 'waist', 'hip']
